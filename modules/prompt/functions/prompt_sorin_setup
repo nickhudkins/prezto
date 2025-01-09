@@ -171,7 +171,7 @@ function prompt_sorin_setup {
   # Define prompts.
   NEWLINE=$'\n'
   PROMPT_INDICATOR="$NEWLINE%B%F{1}❯%F{3}❯%F{2}❯%f%b "
-  PROMPT='${SSH_TTY:+"%F{9}${n/nick_hudkins/me}%f%F{7}@%f%F{3}${m#nick-hudkins-}%f "}%F{4}${_prompt_sorin_pwd}%(!. %B%F{1}#%f%b.) %f${_prompt_sorin_git} ${PROMPT_INDICATOR}'
+  PROMPT='${SSH_TTY:+"%F{9}${${(%):-%n}/nick_hudkins/nick}%f%F{7}@%f%F{3}${${(%):-%m}#nick-hudkins-}%f "}%F{4}${_prompt_sorin_pwd}%(!. %B%F{1}#%f%b.) %f${_prompt_sorin_git} ${PROMPT_INDICATOR}'
   RPROMPT='$python_info[virtualenv]${editor_info[overwrite]}%(?:: %F{1}'
   RPROMPT+=${show_return}
   RPROMPT+='%f)${VIM:+" %B%F{6}V%f%b"}'
