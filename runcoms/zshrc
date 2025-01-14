@@ -10,7 +10,8 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs... You might be looking for... `.zprezto/runcoms/zpreztorc`
+# Some interesting `clear` behavior because I like me
+# some extra vertical space.
 function precmd() {
     # Print a newline before the prompt, unless it's the
     # first prompt in the process.
@@ -20,5 +21,26 @@ function precmd() {
         echo
     fi
 }
-
 alias clear="unset NEW_LINE_BEFORE_PROMPT && clear"
+
+export NVM_DIR="$HOME/.nvm"
+
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Any functions etc....
+[ -s "$HOME/utils.zsh" ] && source $HOME/utils.zsh
+
+# Make iTerm2 Extra Special
+[ -f "$HOME/.iterm2_shell_integration.zsh" ] && source $HOME/.iterm2_shell_integration.zsh
+
+# Auto-complete!
+autoload -U compinit; compinit
+
+source <(yak completion zsh)
+source <(kubectl completion zsh)
+
+# Holy moly neato. This will be rolled out
+# but until then, this lets me yak deploy from a workspace
+# and just touch my yubikey. Thanks @kevin.goodier!
+unset CELL_AUTH_MFA_INPUT
