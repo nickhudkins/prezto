@@ -4,6 +4,8 @@
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
+# Auto-complete!
+autoload -U compinit; compinit
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -33,9 +35,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Make iTerm2 Extra Special
 [ -f "$HOME/.iterm2_shell_integration.zsh" ] && source $HOME/.iterm2_shell_integration.zsh
-
-# Auto-complete!
-autoload -U compinit; compinit
 
 source <(yak completion zsh)
 source <(kubectl completion zsh)
