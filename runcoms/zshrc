@@ -40,7 +40,6 @@ export NVM_DIR="$HOME/.nvm"
 source <(yak completion zsh)
 source <(kubectl completion zsh)
 
-# Holy moly neato. This will be rolled out
-# but until then, this lets me yak deploy from a workspace
-# and just touch my yubikey. Thanks @kevin.goodier!
-unset CELL_AUTH_MFA_INPUT
+if [[ $(uname) == 'Darwin' ]]; then
+  source "${ZDOTDIR:-$HOME}/zshrc.mac"
+fi
