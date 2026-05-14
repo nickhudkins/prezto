@@ -8,6 +8,35 @@
 autoload -U compinit
 compinit
 
+download_bundle() {
+    # Check if both arguments are provided
+    if [ $# -ne 2 ]; then
+        echo "Usage: download_bundle <LOOP_NAME> <GIT_SHA>"
+        echo "Example: download_bundle production abc123def456"
+        return 1
+    fi
+
+    local LOOP_NAME="$1"
+    local GIT_SHA="$2"
+
+    # Construct the download URL
+    local URL="https://a0.muscache.com/airbnb/${LOOP_NAME}-${GIT_SHA}-metro-client-build-artifact.tar.gz"
+
+    # Construct the output filename
+    local OUTPUT_FILE="${LOOP_NAME}-${GIT_SHA}.tar.gz"
+
+    echo "Downloading from: $URL"
+    echo "Saving as: $OUTPUT_FILE"
+
+    # Download the file using curl
+    if curl -L -o "$OUTPUT_FILE" "$URL"; then
+        echo "Download completed successfully: $OUTPUT_FILE"
+    else
+        echo "Download failed!" >&2
+        return 1
+    fi
+}
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -41,5 +70,39 @@ source <(yak completion zsh)
 source <(kubectl completion zsh)
 
 if [[ $(uname) == 'Darwin' ]]; then
-  source "${ZDOTDIR:-$HOME}/zshrc.mac"
+  source "${ZDOTDIR:-$HOME}/.zshrc.mac"
 fi
+
+# bun completions
+[ -s "/Users/nick_hudkins/.bun/_bun" ] && source "/Users/nick_hudkins/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="/Users/nick_hudkins/repos/migration-tools/bin:$PATH"
+
+. "$HOME/.local/bin/env"
+export PYENV_ROOT="$HOME/.pyenv"
+PATH="$(bash --norc -ec 'IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "''/Users/nick_hudkins/.pyenv/shims''" ]]; then unset '\''paths[i]'\''; 
+fi; done; 
+echo "${paths[*]}"')"
+export PATH="/Users/nick_hudkins/.pyenv/shims:${PATH}"
+export PYENV_SHELL=zsh
+source '/opt/homebrew/Cellar/pyenv/2.6.1/completions/pyenv.zsh'
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command=${1:-}
+  [ "$#" -gt 0 ] && shift
+  case "$command" in
+  rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}
+
+alias airchat='airchat claude --api-mode enterprise'
