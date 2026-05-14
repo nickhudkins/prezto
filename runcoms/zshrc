@@ -6,7 +6,7 @@
 #
 # Auto-complete!
 autoload -U compinit
-compinit
+compinit -u
 
 download_bundle() {
     # Check if both arguments are provided
@@ -73,36 +73,36 @@ if [[ $(uname) == 'Darwin' ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.mac"
 fi
 
-# bun completions
-[ -s "/Users/nick_hudkins/.bun/_bun" ] && source "/Users/nick_hudkins/.bun/_bun"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH="/Users/nick_hudkins/repos/migration-tools/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+[ -d "$HOME/repos/migration-tools/bin" ] && export PATH="$HOME/repos/migration-tools/bin:$PATH"
+[ -s "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
 
-. "$HOME/.local/bin/env"
+# pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-PATH="$(bash --norc -ec 'IFS=:; paths=($PATH); 
-for i in ${!paths[@]}; do 
-if [[ ${paths[i]} == "''/Users/nick_hudkins/.pyenv/shims''" ]]; then unset '\''paths[i]'\''; 
-fi; done; 
-echo "${paths[*]}"')"
-export PATH="/Users/nick_hudkins/.pyenv/shims:${PATH}"
-export PYENV_SHELL=zsh
-source '/opt/homebrew/Cellar/pyenv/2.6.1/completions/pyenv.zsh'
-command pyenv rehash 2>/dev/null
-pyenv() {
-  local command=${1:-}
-  [ "$#" -gt 0 ] && shift
-  case "$command" in
-  rehash|shell)
-    eval "$(pyenv "sh-$command" "$@")"
-    ;;
-  *)
-    command pyenv "$command" "$@"
-    ;;
-  esac
-}
+if command -v pyenv &>/dev/null || [[ -d "$PYENV_ROOT/bin" ]]; then
+  export PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
+  export PYENV_SHELL=zsh
+  if [[ $(uname) == 'Darwin' ]]; then
+    _pyenv_completions="$(brew --prefix pyenv 2>/dev/null)/completions/pyenv.zsh"
+    [ -s "$_pyenv_completions" ] && source "$_pyenv_completions"
+    unset _pyenv_completions
+  fi
+  command pyenv rehash 2>/dev/null
+  pyenv() {
+    local command=${1:-}
+    [ "$#" -gt 0 ] && shift
+    case "$command" in
+    rehash|shell)
+      eval "$(pyenv "sh-$command" "$@")"
+      ;;
+    *)
+      command pyenv "$command" "$@"
+      ;;
+    esac
+  }
+fi
 
 alias airchat='airchat claude --api-mode enterprise'
