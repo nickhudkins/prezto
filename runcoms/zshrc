@@ -105,4 +105,4 @@ if command -v pyenv &>/dev/null || [[ -d "$PYENV_ROOT/bin" ]]; then
   }
 fi
 
-alias airchat='airchat claude --api-mode enterprise'
+alias airchat='airchat claude --api-mode enterprise --model="opus[1m]"'
