@@ -105,4 +105,16 @@ if command -v pyenv &>/dev/null || [[ -d "$PYENV_ROOT/bin" ]]; then
   }
 fi
 
-alias airchat='airchat claude --api-mode enterprise --model="opus[1m]"'
+airchat() {
+  # Subcommands that manage the CLI itself: pass through untouched.
+  case "$1" in
+    mcp|config|util|codex|doctor|update|help|--help|-h|--version)
+      command airchat "$@"
+      ;;
+    # Bare launch or a chat prompt/flags: inject the enterprise launcher flags,
+    # then forward everything the user typed verbatim.
+    *)
+      command airchat claude --api-mode enterprise --model="opus[1m]" "$@"
+      ;;
+  esac
+}
